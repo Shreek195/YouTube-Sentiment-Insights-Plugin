@@ -23,24 +23,38 @@ import seaborn as sns
 import dagshub
 
 # Load environment variables  DO THIS WHEN LOCAL
-# from dotenv import load_dotenv
-# load_dotenv()
+def setup_mlflow(repo_name: str):
+    """
+    Set up MLflow tracking URI for DagsHub.
+    Uses GitHub Actions secrets in CI or .env locally.
+    """
+    username = os.getenv("DAGSHUB_USERNAME")
+    token = os.getenv("DAGSHUB_TOKEN")
 
-# Set up DagsHub credentials for MLflow tracking
-username = os.getenv("DAGSHUB_USERNAME")
-token = os.getenv("DAGSHUB_TOKEN")
+    # fallback for local dev if .env exists
+    if not username or not token:
+        from dotenv import load_dotenv
+        load_dotenv()
+        username = os.getenv("DAGSHUB_USERNAME")
+        token = os.getenv("DAGSHUB_TOKEN")
 
-if not username or not token:
-    raise ValueError("Missing DagsHub credentials in environment variables")
+    if not username or not token:
+        raise ValueError("Missing DagsHub credentials. Set DAGSHUB_USERNAME and DAGSHUB_TOKEN.")
 
-os.environ["MLFLOW_TRACKING_USERNAME"] = token
-os.environ["MLFLOW_TRACKING_PASSWORD"] = token
+    # Authenticated MLflow URI
+    mlflow_uri = f"https://{username}:{token}@dagshub.com/{username}/{repo_name}.mlflow"
 
-# Construct the authenticated MLflow tracking URI
-mlflow_uri = f"https://{username}:{token}@dagshub.com/{username}/YouTube-Sentiment-Insights-Plugin.mlflow"
+    # Set MLflow URI
+    mlflow.set_tracking_uri(mlflow_uri)
 
-dagshub.init(repo_owner=username, repo_name="YouTube-Sentiment-Insights-Plugin", mlflow=True)
-mlflow.set_tracking_uri(mlflow_uri)
+    # Optionally set MLflow env vars
+    os.environ["MLFLOW_TRACKING_USERNAME"] = username
+    os.environ["MLFLOW_TRACKING_PASSWORD"] = token
+
+    # Initialize dagshub for artifacts/logging
+    dagshub.init(repo_owner=username, repo_name=repo_name, mlflow=True)
+
+    print(f"MLflow tracking URI set: {mlflow_uri}")
 
 
 def load_params(params_path: str) -> dict:

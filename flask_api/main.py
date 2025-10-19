@@ -25,9 +25,9 @@ from nltk.stem import WordNetLemmatizer
 # --------------------------
 # DagsHub + MLflow setup
 # --------------------------
-# Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
+# Load environment variables  DO THIS WHEN LOCAL
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 # Set up DagsHub credentials for MLflow tracking
@@ -36,6 +36,9 @@ token = os.getenv("DAGSHUB_TOKEN")
 
 if not username or not token:
     raise ValueError("Missing DagsHub credentials in environment variables")
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = token
 
 # Construct the authenticated MLflow tracking URI
 mlflow_uri = f"https://{username}:{token}@dagshub.com/{username}/YouTube-Sentiment-Insights-Plugin.mlflow"

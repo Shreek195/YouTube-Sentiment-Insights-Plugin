@@ -22,6 +22,9 @@ token = os.getenv("DAGSHUB_TOKEN")
 if not username or not token:
     raise ValueError("Missing DagsHub credentials in environment variables")
 
+os.environ["MLFLOW_TRACKING_USERNAME"] = token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = token
+
 # Construct the authenticated MLflow tracking URI
 mlflow_uri = f"https://{username}:{token}@dagshub.com/{username}/YouTube-Sentiment-Insights-Plugin.mlflow"
 

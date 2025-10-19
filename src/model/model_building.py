@@ -69,7 +69,7 @@ def train_lgbm(X_train: np.ndarray, y_train: np.ndarray, learning_rate: float, m
             colsample_bytree=colsample_bytree,
             subsample=subsample,
             n_estimators=n_estimators,
-            device='gpu',
+            # device='gpu',  <- Ubuntu won't have this GPU Support OpenCL
             n_jobs=-1,
             random_state=42
         )

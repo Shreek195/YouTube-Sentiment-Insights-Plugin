@@ -1,41 +1,24 @@
-# Core libraries
-numpy==1.26.4
-pandas==2.3.3
-scikit-learn==1.7.1
-scipy==1.16.2
-matplotlib==3.10.6
-seaborn==0.13.2
-joblib==1.5.2
+numpy
+pandas
+scikit-learn
+scipy
+matplotlib
+seaborn
+joblib
 
-# MLflow & DVC
-mlflow==2.15.0
-mlflow-skinny==2.15.0
-dvc==3.63.0
-dvc-azure==3.1.0
-dvc-data==3.16.12
-dvc-gdrive==3.0.1
-dvc-gs==3.0.2
-dvc-http==2.32.0
-dvc-objects==5.1.2
-dvc-s3==3.2.2
-dvc-ssh==4.2.2
-dvc-studio-client==0.22.0
+mlflow
+dvc
+dagshub
 
-# Dagshub
-dagshub==0.6.3
+Flask
+flask-cors
+waitress
 
-# Web / Flask API
-Flask==3.1.2
-flask-cors==6.0.1
-waitress==3.0.2  # optional if using production WSGI
+fsspec
+s3fs
+gcsfs
+adlfs
 
-# Data storage / cloud (keep only Linux-compatible)
-fsspec==2025.9.0
-s3fs==2025.9.0
-gcsfs==2025.9.0
-adlfs==2025.8.0
-
-# Utility
-python-dotenv==1.1.1
-requests==2.32.5
-tqdm==4.67.1
+python-dotenv
+requests
+tqdm

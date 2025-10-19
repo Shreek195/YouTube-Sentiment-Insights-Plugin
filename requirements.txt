@@ -5,6 +5,12 @@ scipy
 matplotlib
 seaborn
 joblib
+nltk
+lightgbm
+yaml
+pickle
+imblearn
+wordcloud
 
 mlflow
 dvc

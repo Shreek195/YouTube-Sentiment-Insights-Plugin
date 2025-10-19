@@ -25,11 +25,18 @@ jobs:
 
       - name: install dependencies
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: run pipeline
+      - name: Export DagsHub credentials
+        run: |
+          echo "Exporting DagsHub credentials..."
+          export DAGSHUB_USERNAME=${{ secrets.DAGSHUB_USERNAME }}
+          export DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }}
+
+        name: Run DVC pipeline
+        run: |
+          dvc repro
         env:
           DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
-        run: |
-          dvc repro

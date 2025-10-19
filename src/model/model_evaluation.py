@@ -22,9 +22,9 @@ import seaborn as sns
 
 import dagshub
 
-# Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
+# Load environment variables  DO THIS WHEN LOCAL
+# from dotenv import load_dotenv
+# load_dotenv()
 
 # Set up DagsHub credentials for MLflow tracking
 username = os.getenv("DAGSHUB_USERNAME")

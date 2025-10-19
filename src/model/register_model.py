@@ -9,9 +9,9 @@ from src.logger import logging
 
 import dagshub
 
-# Load environment variables
-from dotenv import load_dotenv
-load_dotenv()
+# Load environment variables DO THIS WHEN LOCAL
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 

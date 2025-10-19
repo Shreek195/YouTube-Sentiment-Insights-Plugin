@@ -55,7 +55,7 @@ def setup_mlflow(repo_name: str):
     dagshub.init(repo_owner=username, repo_name=repo_name, mlflow=True)
 
     print(f"MLflow tracking URI set: {mlflow_uri}")
-
+setup_mlflow("YouTube-Sentiment-Insights-Plugin")
 
 def load_params(params_path: str) -> dict:
     '''
@@ -176,6 +176,7 @@ def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
         raise
 
 def main():
+    
     mlflow.set_experiment('dvc-pipeline-runs-v1')
 
     with mlflow.start_run() as run:

@@ -22,3 +22,5 @@ adlfs
 python-dotenv
 requests
 tqdm
+
+-e .

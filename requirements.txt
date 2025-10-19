@@ -7,7 +7,6 @@ seaborn
 joblib
 nltk
 lightgbm
-pickle
 imblearn
 wordcloud
 

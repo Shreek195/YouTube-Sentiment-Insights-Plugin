@@ -48,7 +48,6 @@ def setup_mlflow(repo_name: str):
     dagshub.init(repo_owner=username, repo_name=repo_name, mlflow=True)
 
     print(f"MLflow tracking URI set: {mlflow_uri}")
-setup_mlflow("YouTube-Sentiment-Insights-Plugin")
 
 
 def load_model_info(file_path: str) -> dict:

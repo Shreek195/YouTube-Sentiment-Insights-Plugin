@@ -87,3 +87,16 @@ target/
 
 # Mypy cache
 .mypy_cache/
+
+# Local S3
+local_s3
+
+# Models
+models/
+
+# Raw File for testing modules
+raw.py
+
+# Reports and logs
+reports/
+logs

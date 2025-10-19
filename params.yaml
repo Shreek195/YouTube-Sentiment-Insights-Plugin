@@ -1,0 +1,17 @@
+data_ingestion:
+  test_size: 0.20
+
+feature_engineering:
+  ngram_range: [1, 3]
+  max_features: 1000
+
+model_building:
+  n_estimators: 679
+  learning_rate: 0.07741711934422332
+  max_depth: 15
+  num_leaves: 150
+  min_child_samples: 72
+  colsample_bytree: 0.9932215408606573
+  subsample: 0.6210587842092341
+  reg_alpha: 0.012753240867635789
+  reg_lambda: 0.002637790872668392

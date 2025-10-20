@@ -77,23 +77,19 @@ class TestModelLoading(unittest.TestCase):
         self.assertEqual(len(prediction.shape), 1)
 
     def test_model_performance(self):
-        # Extract features and labels
         X_holdout = self.holdout_data.iloc[:, 0:-1].copy()
         y_holdout = self.holdout_data.iloc[:, -1]
 
-        # Rename columns to match vectorizer
+        # Match vectorizer columns
         X_holdout.columns = self.vectorizer.get_feature_names_out()
 
-        # Predict
         y_pred = self.model.predict(X_holdout)
 
-        # Calculate metrics
         accuracy_new = accuracy_score(y_holdout, y_pred)
-        precision_new = precision_score(y_holdout, y_pred)
-        recall_new = recall_score(y_holdout, y_pred)
-        f1_new = f1_score(y_holdout, y_pred)
+        precision_new = precision_score(y_holdout, y_pred, average='weighted')
+        recall_new = recall_score(y_holdout, y_pred, average='weighted')
+        f1_new = f1_score(y_holdout, y_pred, average='weighted')
 
-        # Threshold checks
         expected_accuracy = 0.40
         expected_precision = 0.40
         expected_recall = 0.40
@@ -103,6 +99,7 @@ class TestModelLoading(unittest.TestCase):
         self.assertGreaterEqual(precision_new, expected_precision)
         self.assertGreaterEqual(recall_new, expected_recall)
         self.assertGreaterEqual(f1_new, expected_f1)
+
 
 
 if __name__ == "__main__":

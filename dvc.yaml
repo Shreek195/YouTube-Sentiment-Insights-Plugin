@@ -54,6 +54,7 @@ stages:
     - data/processed/test_tfidf.csv
     - src/model/model_evaluation.py
     outs:
+    - reports/model_registry_info.json
     - reports/experiment_info.json
     - reports/metrics.json
 

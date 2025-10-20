@@ -100,3 +100,6 @@ raw.py
 # Reports and logs
 reports/
 logs
+
+tests/
+scripts/

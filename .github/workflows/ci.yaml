@@ -5,12 +5,15 @@ on: push
 jobs:
   project-testing:
     runs-on: ubuntu-latest
+    env:
+      DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+      DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
 
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: setup python
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.11'
@@ -23,14 +26,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: install dependencies
+      - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: run pipeline
-        env:
-          DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
-          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
-        run: |
-          dvc repro
+      - name: Run DVC pipeline
+        run: dvc repro
+
+      - name: Run model unit tests
+        run: python -m unittest test/test_model.py
+
+      - name: Promote model to production
+        if: success()
+        run: python scripts/promote_model.py
+
+      - name: Run Flask app tests
+        if: success()
+        run: python -m unittest tests/test_flask_app.py

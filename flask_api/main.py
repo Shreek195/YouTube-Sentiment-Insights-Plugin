@@ -64,6 +64,8 @@ def setup_mlflow(repo_name: str):
 
     print(f"MLflow tracking URI set: {mlflow_uri}")
 
+# setup_mlflow("YouTube-Sentiment-Insights-Plugin")  # UNCOMMENT WHEN LOCAL RUN
+
 
 
 app = Flask(__name__)

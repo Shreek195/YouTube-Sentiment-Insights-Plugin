@@ -175,7 +175,7 @@ def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
         raise
 
 def main():
-    setup_mlflow("YouTube-Sentiment-Insights-Plugin")
+    # setup_mlflow("YouTube-Sentiment-Insights-Plugin") # UNCOMMENT WHEN LOCAL RUN
     mlflow.set_experiment('dvc-pipeline-runs-v1')
 
     with mlflow.start_run() as run:

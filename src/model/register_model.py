@@ -126,7 +126,7 @@ def register_model(model_name: str, run_id: str, artifact_path: str) -> dict:
         raise
 
 def main():
-    setup_mlflow("YouTube-Sentiment-Insights-Plugin")
+    # setup_mlflow("YouTube-Sentiment-Insights-Plugin")  # UNCOMMENT WHEN LOCAL RUN
     try:
         model_info_path = 'reports/experiment_info.json'
         model_info = load_model_info(model_info_path)

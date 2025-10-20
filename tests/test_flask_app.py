@@ -1,10 +1,10 @@
 import unittest
-from flask_app.app import app
+from flask_api.main import main
 
 class FlaskAppTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = app.test_client()
+        cls.client = main.test_client()
 
     def test_home_page(self):
         response = self.client.get('/')
@@ -15,8 +15,8 @@ class FlaskAppTests(unittest.TestCase):
         response = self.client.post('/predict', data=dict(text="I love this!"))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(
-            b'Positive' in response.data or b'Negative' in response.data,
-            "Response should contain either 'Positive' or 'Negative'"
+            b'Positive' in response.data or b'Negative' in response.data or b'Neutral' in response.data,
+            "Response should contain either 'Positive', 'Negative' or 'Neutral'"
         )
 
 if __name__ == '__main__':

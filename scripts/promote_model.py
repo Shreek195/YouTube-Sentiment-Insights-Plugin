@@ -1,5 +1,6 @@
 import os
 import mlflow
+from mlflow import MlflowClient
 import dagshub
 
 def setup_mlflow(repo_name: str):
@@ -32,12 +33,15 @@ def setup_mlflow(repo_name: str):
         dagshub.init(repo_owner=username, repo_name=repo_name, mlflow=True)
 
     print(f"✅ MLflow tracking URI set to {mlflow_uri}")
-    
+
 def promote_model():
     
     setup_mlflow("YouTube-Sentiment-Insights-Plugin")
 
-    client = mlflow.MLflowClient()
+    try:
+        client = mlflow.MLflowClient()
+    except AttributeError:
+        client = MlflowClient()
 
     model_name = "youtube-sentiment-lgbm"
     # Get the latest version 

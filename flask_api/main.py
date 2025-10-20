@@ -18,7 +18,6 @@ from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-
 # --------------------------
 # MLflow setup helper
 # --------------------------
@@ -53,11 +52,7 @@ def preprocess_comment(comment):
         comment = re.sub(r'[^A-Za-z0-9\s!?.,]', '', comment)
         stop_words = set(stopwords.words('english')) - {'not', 'but', 'no', 'however', 'yet'}
         lemmatizer = WordNetLemmatizer()
-        comment = ' '.join([
-            lemmatizer.lemmatize(word)
-            for word in comment.split() if word not in stop_words
-        ])
-        return comment
+        return ' '.join([lemmatizer.lemmatize(word) for word in comment.split() if word not in stop_words])
     except Exception as e:
         print(f"Error in preprocessing comment: {e}")
         return comment
@@ -67,6 +62,7 @@ def preprocess_comment(comment):
 # Model Loader
 # --------------------------
 def load_model_and_vectorizer(model_name):
+    """Load staged model and vectorizer. Returns (None, None) if failed."""
     try:
         model_uri = f"models:/{model_name}/Staging"
         print(f"🔹 Loading model from {model_uri}")
@@ -80,21 +76,33 @@ def load_model_and_vectorizer(model_name):
         with open(vectorizer_path, "rb") as f:
             vectorizer = pickle.load(f)
 
-        print("✅ Model and vectorizer loaded successfully from DagsHub")
+        print("✅ Model and vectorizer loaded successfully")
         return model, vectorizer
+
     except Exception as e:
-        print(f"❌ Failed to load staged model: {e}")
+        print(f"❌ Failed to load model/vectorizer: {e}")
         return None, None
 
 
 # --------------------------
-# App Factory (KEY FIX)
+# App Factory (MLOps-friendly)
 # --------------------------
-def create_app():
+def create_app(testing=False):
+    """
+    Flask app factory.
+    If `testing=True`, MLflow/model loading is skipped for CI/unit tests.
+    """
     app = Flask(__name__)
     CORS(app)
 
-    model, vectorizer = load_model_and_vectorizer("youtube-sentiment-lgbm")
+    model, vectorizer = (None, None)
+    if not testing:
+        # Only load MLflow model if not in test mode
+        try:
+            setup_mlflow("YouTube-Sentiment-Insights-Plugin")
+            model, vectorizer = load_model_and_vectorizer("youtube-sentiment-lgbm")
+        except Exception as e:
+            print(f"Warning: Skipping model loading: {e}")
 
     @app.route('/')
     def home():
@@ -102,6 +110,9 @@ def create_app():
 
     @app.route('/predict', methods=['POST'])
     def predict():
+        if model is None or vectorizer is None:
+            return jsonify({"error": "Model not loaded"}), 500
+
         data = request.json
         comments = data.get('comments')
         if not comments:
@@ -109,13 +120,10 @@ def create_app():
 
         preprocessed = [preprocess_comment(c) for c in comments]
         transformed = vectorizer.transform(preprocessed)
-        feature_names = vectorizer.get_feature_names_out()
-        input_df = pd.DataFrame(transformed.toarray(), columns=feature_names)
+        input_df = pd.DataFrame(transformed.toarray(), columns=vectorizer.get_feature_names_out())
         predictions = model.predict(input_df).tolist()
 
-        response = [
-            {"comment": c, "sentiment": int(p)} for c, p in zip(comments, predictions)
-        ]
+        response = [{"comment": c, "sentiment": int(p)} for c, p in zip(comments, predictions)]
         return jsonify(response)
 
     return app

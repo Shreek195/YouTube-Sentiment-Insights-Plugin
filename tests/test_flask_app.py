@@ -1,10 +1,10 @@
 import unittest
-from flask_api.main import create_app  # import the Flask app instance directly
+from flask_api.main import app  # import the Flask app instance directly
 
 class FlaskAppTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.client = create_app.test_client()  # directly use app.test_client()
+        cls.client = app.test_client()  # directly use app.test_client()
 
     def test_home_page(self):
         response = self.client.get('/')

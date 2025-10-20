@@ -41,7 +41,6 @@ def setup_mlflow(repo_name: str):
     dagshub.init(repo_owner=username, repo_name=repo_name, mlflow=True)
     print(f"✅ MLflow tracking URI set to {mlflow_uri}")
 
-
 # --------------------------
 # Preprocessing
 # --------------------------
@@ -56,7 +55,6 @@ def preprocess_comment(comment):
     except Exception as e:
         print(f"Error in preprocessing comment: {e}")
         return comment
-
 
 # --------------------------
 # Model Loader
@@ -83,7 +81,6 @@ def load_model_and_vectorizer(model_name):
         print(f"❌ Failed to load model/vectorizer: {e}")
         return None, None
 
-
 # --------------------------
 # App Factory (MLOps-friendly)
 # --------------------------
@@ -97,7 +94,6 @@ def create_app(testing=False):
 
     model, vectorizer = (None, None)
     if not testing:
-        # Only load MLflow model if not in test mode
         try:
             setup_mlflow("YouTube-Sentiment-Insights-Plugin")
             model, vectorizer = load_model_and_vectorizer("youtube-sentiment-lgbm")
@@ -110,6 +106,10 @@ def create_app(testing=False):
 
     @app.route('/predict', methods=['POST'])
     def predict():
+        if testing:
+            # Dummy response for tests
+            return jsonify([{"comment": c, "sentiment": 1} for c in request.json.get("comments", [])])
+
         if model is None or vectorizer is None:
             return jsonify({"error": "Model not loaded"}), 500
 
@@ -128,10 +128,13 @@ def create_app(testing=False):
 
     return app
 
+# --------------------------
+# Global app for running locally
+# --------------------------
+app = create_app()
 
 # --------------------------
 # Entry point
 # --------------------------
 if __name__ == "__main__":
-    app = create_app()
     app.run(host="0.0.0.0", port=5000, debug=True)

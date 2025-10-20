@@ -77,24 +77,32 @@ class TestModelLoading(unittest.TestCase):
         self.assertEqual(len(prediction.shape), 1)
 
     def test_model_performance(self):
-        # Prepare holdout input and labels
-        X_holdout = self.holdout_data.iloc[:, 0:-1]
+        # Extract features and labels
+        X_holdout = self.holdout_data.iloc[:, 0:-1].copy()
         y_holdout = self.holdout_data.iloc[:, -1]
+
+        # Rename columns to match vectorizer
+        X_holdout.columns = self.vectorizer.get_feature_names_out()
 
         # Predict
         y_pred = self.model.predict(X_holdout)
 
-        # Metrics
-        accuracy = accuracy_score(y_holdout, y_pred)
-        precision = precision_score(y_holdout, y_pred)
-        recall = recall_score(y_holdout, y_pred)
-        f1 = f1_score(y_holdout, y_pred)
+        # Calculate metrics
+        accuracy_new = accuracy_score(y_holdout, y_pred)
+        precision_new = precision_score(y_holdout, y_pred)
+        recall_new = recall_score(y_holdout, y_pred)
+        f1_new = f1_score(y_holdout, y_pred)
 
-        # Assert thresholds
-        self.assertGreaterEqual(accuracy, 0.40)
-        self.assertGreaterEqual(precision, 0.40)
-        self.assertGreaterEqual(recall, 0.40)
-        self.assertGreaterEqual(f1, 0.40)
+        # Threshold checks
+        expected_accuracy = 0.40
+        expected_precision = 0.40
+        expected_recall = 0.40
+        expected_f1 = 0.40
+
+        self.assertGreaterEqual(accuracy_new, expected_accuracy)
+        self.assertGreaterEqual(precision_new, expected_precision)
+        self.assertGreaterEqual(recall_new, expected_recall)
+        self.assertGreaterEqual(f1_new, expected_f1)
 
 
 if __name__ == "__main__":

@@ -22,12 +22,12 @@ class TestModelLoading(unittest.TestCase):
 
         # Authenticated MLflow URI
         mlflow_uri = f"https://{username}:{token}@dagshub.com/{username}/{repo_name}.mlflow"
-        
+
         # Set MLflow URI
         mlflow.set_tracking_uri(mlflow_uri)
 
         # Load the new model from MLflow model registry
-        cls.new_model_name = "my_model"
+        cls.new_model_name = "youtube-sentiment-lgbm"
         cls.new_model_version = cls.get_latest_model_version(cls.new_model_name)
         cls.new_model_uri = f'models:/{cls.new_model_name}/{cls.new_model_version}'
         cls.new_model = mlflow.pyfunc.load_model(cls.new_model_uri)

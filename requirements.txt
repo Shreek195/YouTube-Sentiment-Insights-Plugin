@@ -16,6 +16,7 @@ dagshub
 
 Flask
 flask-cors
+flask_app
 waitress
 
 fsspec

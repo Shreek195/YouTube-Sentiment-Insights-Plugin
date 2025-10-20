@@ -18,12 +18,13 @@ class TestModelLoading(unittest.TestCase):
         os.environ["MLFLOW_TRACKING_USERNAME"] = username
         os.environ["MLFLOW_TRACKING_PASSWORD"] = token
 
-        dagshub_url = "https://dagshub.com"
-        repo_owner = "vikashdas770"
-        repo_name = "YT-Capstone-Project"
+        repo_name = "YouTube-Sentiment-Insights-Plugin"
 
-        # Set up MLflow tracking URI
-        mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}.mlflow')
+        # Authenticated MLflow URI
+        mlflow_uri = f"https://{username}:{token}@dagshub.com/{username}/{repo_name}.mlflow"
+        
+        # Set MLflow URI
+        mlflow.set_tracking_uri(mlflow_uri)
 
         # Load the new model from MLflow model registry
         cls.new_model_name = "my_model"

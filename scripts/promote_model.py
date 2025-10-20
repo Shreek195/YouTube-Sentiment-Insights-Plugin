@@ -5,12 +5,12 @@ import dagshub
 def setup_mlflow(repo_name: str):
     """
     Set up MLflow tracking URI for DagsHub.
-    Uses GitHub Actions secrets in CI or .env locally.
+    Works in both local and CI environments.
     """
     username = os.getenv("DAGSHUB_USERNAME")
     token = os.getenv("DAGSHUB_TOKEN")
 
-    # fallback for local dev if .env exists
+    # Fallback for local .env
     if not username or not token:
         from dotenv import load_dotenv
         load_dotenv()
@@ -22,19 +22,17 @@ def setup_mlflow(repo_name: str):
 
     # Authenticated MLflow URI
     mlflow_uri = f"https://{username}:{token}@dagshub.com/{username}/{repo_name}.mlflow"
-
-    # Set MLflow URI
     mlflow.set_tracking_uri(mlflow_uri)
 
-    # Optionally set MLflow env vars
     os.environ["MLFLOW_TRACKING_USERNAME"] = username
     os.environ["MLFLOW_TRACKING_PASSWORD"] = token
 
-    # Initialize dagshub for artifacts/logging
-    dagshub.init(repo_owner=username, repo_name=repo_name, mlflow=True)
+    # ✅ Only initialize dagshub when running locally
+    if os.getenv("GITHUB_ACTIONS") != "true":
+        dagshub.init(repo_owner=username, repo_name=repo_name, mlflow=True)
 
-    print(f"MLflow tracking URI set: {mlflow_uri}")
-
+    print(f"✅ MLflow tracking URI set to {mlflow_uri}")
+    
 def promote_model():
     
     setup_mlflow("YouTube-Sentiment-Insights-Plugin")
